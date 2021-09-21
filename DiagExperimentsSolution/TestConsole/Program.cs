@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿
 
 // https://github.com/microsoft/clrmd/commits/master
 // MiniDumpReader
