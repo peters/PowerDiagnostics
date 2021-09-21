@@ -2,10 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc;
 using System;
 using System.Diagnostics;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.ReversedServer
 {
     /// <summary>
     /// Represents a runtine instance connection to a reversed diagnostics server.

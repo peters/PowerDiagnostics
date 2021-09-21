@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Threading;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc
 {
     internal class IpcClient
     {

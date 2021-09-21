@@ -4,7 +4,7 @@
 
 using System.Net.Sockets;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc
 {
     internal sealed class ExposedSocketNetworkStream :
         NetworkStream

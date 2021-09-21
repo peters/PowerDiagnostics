@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.Tracing;
-using System.Text;
 using System.Threading.Tasks;
 using ClrDiagnostics.Extensions;
 using Microsoft.Diagnostics.NETCore.Client;

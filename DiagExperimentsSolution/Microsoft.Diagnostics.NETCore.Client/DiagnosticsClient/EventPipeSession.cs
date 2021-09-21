@@ -2,12 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsClient.DiagnosticsClient
 {
     public class EventPipeSession : IDisposable
     {
@@ -24,7 +25,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
             _providers = providers;
             _requestRundown = requestRundown;
             _circularBufferMB = circularBufferMB;
-            
+
             var config = new EventPipeSessionConfiguration(circularBufferMB, EventPipeSerializationFormat.NetTrace, providers, requestRundown);
             var message = new IpcMessage(DiagnosticsServerCommandSet.EventPipe, (byte)EventPipeCommandId.CollectTracing2, config.SerializeV2());
             EventStream = IpcClient.SendMessage(endpoint, message, out var response);

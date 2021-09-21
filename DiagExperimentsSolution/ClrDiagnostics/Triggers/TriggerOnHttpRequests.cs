@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.Tracing;
-using System.Text;
 using Microsoft.Diagnostics.Tracing;
 
 namespace ClrDiagnostics.Triggers

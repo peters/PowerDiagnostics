@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Text;
-
-using ClrDiagnostics.Extensions;
-
-using Microsoft.Diagnostics.NETCore.Client;
+﻿using System.Diagnostics.Tracing;
 using Microsoft.Diagnostics.Tracing;
 using Microsoft.Diagnostics.Tracing.Parsers;
 

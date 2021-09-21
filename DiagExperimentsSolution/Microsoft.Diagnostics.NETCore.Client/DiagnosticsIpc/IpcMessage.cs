@@ -8,17 +8,17 @@ using System.IO;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc
 {
     /// <summary>
     /// Errors (HRESULT) returned for DiagnosticsServerCommandId.Error responses.
     /// </summary>
     internal enum DiagnosticsIpcError : uint
     {
-        BadEncoding     = 0x80131384,
-        UnknownCommand  = 0x80131385,
-        UnknownMagic    = 0x80131386,
-        UnknownError    = 0x80131387
+        BadEncoding = 0x80131384,
+        UnknownCommand = 0x80131385,
+        UnknownMagic = 0x80131386,
+        UnknownError = 0x80131387
     }
 
     /// <summary>
@@ -87,10 +87,10 @@ namespace Microsoft.Diagnostics.NETCore.Client
         public IpcHeader Header { get; private set; } = default;
 
         public byte[] Serialize()
-        { 
+        {
             byte[] serializedData = null;
             // Verify things will fit in the size capacity
-            Header.Size = checked((UInt16)(IpcHeader.HeaderSizeInBytes + Payload.Length));
+            Header.Size = checked((ushort)(IpcHeader.HeaderSizeInBytes + Payload.Length));
             byte[] headerBytes = Header.Serialize();
 
             using (var stream = new MemoryStream())

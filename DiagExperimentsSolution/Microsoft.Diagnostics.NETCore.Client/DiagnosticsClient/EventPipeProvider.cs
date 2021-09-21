@@ -8,7 +8,7 @@ using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsClient.DiagnosticsClient
 {
     public sealed class EventPipeProvider
     {
@@ -32,23 +32,23 @@ namespace Microsoft.Diagnostics.NETCore.Client
         {
             return $"{Name}:0x{Keywords:X16}:{(uint)EventLevel}{(Arguments == null ? "" : $":{GetArgumentString()}")}";
         }
-        
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
             {
                 return false;
             }
-            
+
             return this == (EventPipeProvider)obj;
         }
 
         public override int GetHashCode()
         {
             int hash = 0;
-            hash ^= this.Name.GetHashCode();
-            hash ^= this.Keywords.GetHashCode();
-            hash ^= this.EventLevel.GetHashCode();
+            hash ^= Name.GetHashCode();
+            hash ^= Keywords.GetHashCode();
+            hash ^= EventLevel.GetHashCode();
             hash ^= GetArgumentString().GetHashCode();
             return hash;
         }
@@ -60,7 +60,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
 
         public static bool operator !=(EventPipeProvider left, EventPipeProvider right)
         {
-            return !(left == right);    
+            return !(left == right);
         }
 
         internal string GetArgumentString()
@@ -69,7 +69,8 @@ namespace Microsoft.Diagnostics.NETCore.Client
             {
                 return "";
             }
-            return string.Join(";", Arguments.Select(a => {
+            return string.Join(";", Arguments.Select(a =>
+            {
                 var escapedKey = a.Key.Contains(";") || a.Key.Contains("=") ? $"\"{a.Key}\"" : a.Key;
                 var escapedValue = a.Value.Contains(";") || a.Value.Contains("=") ? $"\"{a.Value}\"" : a.Value;
                 return $"{escapedKey}={escapedValue}";

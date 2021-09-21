@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsClient.DiagnosticsClient
 {
     internal enum EventPipeSerializationFormat
     {
@@ -17,7 +17,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
 
     internal class EventPipeSessionConfiguration
     {
-        public EventPipeSessionConfiguration(int circularBufferSizeMB, EventPipeSerializationFormat format, IEnumerable<EventPipeProvider> providers, bool requestRundown=true)
+        public EventPipeSessionConfiguration(int circularBufferSizeMB, EventPipeSerializationFormat format, IEnumerable<EventPipeProvider> providers, bool requestRundown = true)
         {
             if (circularBufferSizeMB == 0)
                 throw new ArgumentException($"Buffer size cannot be zero.");

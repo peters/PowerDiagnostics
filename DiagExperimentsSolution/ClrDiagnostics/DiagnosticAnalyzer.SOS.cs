@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 
 using Microsoft.Diagnostics.Runtime;
-using ClrDiagnostics.Extensions;
-using ClrDiagnostics.Models;
 using System.Threading.Tasks;
 
 namespace ClrDiagnostics

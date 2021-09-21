@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc
 {
     internal abstract class IpcServerTransport : IDisposable
     {
@@ -63,7 +63,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
         {
             if (_disposed)
             {
-                throw new ObjectDisposedException(this.GetType().Name);
+                throw new ObjectDisposedException(GetType().Name);
             }
         }
     }

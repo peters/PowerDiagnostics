@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
-using System.Text;
-using System.Linq;
-
-using Microsoft.Diagnostics.NETCore.Client;
 using Microsoft.Diagnostics.Tracing;
-using Microsoft.Diagnostics.Tracing.Parsers;
-using System.Diagnostics;
-using ClrDiagnostics.Extensions;
 
 namespace ClrDiagnostics.Triggers
 {

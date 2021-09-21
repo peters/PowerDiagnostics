@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsClient
 {
     /// <summary>
     /// This is a top-level class that contains methods to send various diagnostics command to the runtime.
@@ -62,7 +63,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
         /// <returns>
         /// An EventPipeSession object representing the EventPipe session that just started.
         /// </returns> 
-        public EventPipeSession StartEventPipeSession(IEnumerable<EventPipeProvider> providers, bool requestRundown=true, int circularBufferMB=256)
+        public EventPipeSession StartEventPipeSession(IEnumerable<EventPipeProvider> providers, bool requestRundown = true, int circularBufferMB = 256)
         {
             return new EventPipeSession(_endpoint, providers, requestRundown, circularBufferMB);
         }
@@ -76,7 +77,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
         /// <returns>
         /// An EventPipeSession object representing the EventPipe session that just started.
         /// </returns> 
-        public EventPipeSession StartEventPipeSession(EventPipeProvider provider, bool requestRundown=true, int circularBufferMB=256)
+        public EventPipeSession StartEventPipeSession(EventPipeProvider provider, bool requestRundown = true, int circularBufferMB = 256)
         {
             return new EventPipeSession(_endpoint, new[] { provider }, requestRundown, circularBufferMB);
         }
@@ -87,7 +88,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
         /// <param name="dumpType">Type of the dump to be generated</param>
         /// <param name="dumpPath">Full path to the dump to be generated. By default it is /tmp/coredump.{pid}</param>
         /// <param name="logDumpGeneration">When set to true, display the dump generation debug log to the console.</param>
-        public void WriteDump(DumpType dumpType, string dumpPath, bool logDumpGeneration=false)
+        public void WriteDump(DumpType dumpType, string dumpPath, bool logDumpGeneration = false)
         {
             if (string.IsNullOrEmpty(dumpPath))
                 throw new ArgumentNullException($"{nameof(dumpPath)} required");
@@ -118,14 +119,14 @@ namespace Microsoft.Diagnostics.NETCore.Client
         /// <param name="profilerGuid">Guid for the profiler to be attached</param>
         /// <param name="profilerPath">Path to the profiler to be attached</param>
         /// <param name="additionalData">Additional data to be passed to the profiler</param>
-        public void AttachProfiler(TimeSpan attachTimeout, Guid profilerGuid, string profilerPath, byte[] additionalData=null)
+        public void AttachProfiler(TimeSpan attachTimeout, Guid profilerGuid, string profilerPath, byte[] additionalData = null)
         {
             if (profilerGuid == null || profilerGuid == Guid.Empty)
             {
                 throw new ArgumentException($"{nameof(profilerGuid)} must be a valid Guid");
             }
 
-            if (String.IsNullOrEmpty(profilerPath))
+            if (string.IsNullOrEmpty(profilerPath))
             {
                 throw new ArgumentException($"{nameof(profilerPath)} must be non-null");
             }
@@ -139,7 +140,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
                     uint hr = BitConverter.ToUInt32(response.Payload, 0);
                     if (hr == (uint)DiagnosticsIpcError.UnknownCommand)
                     {
-                      throw new UnsupportedCommandException("The target runtime does not support profiler attach");
+                        throw new UnsupportedCommandException("The target runtime does not support profiler attach");
                     }
                     throw new ServerErrorException($"Profiler attach failed (HRESULT: 0x{hr:X8})");
                 case DiagnosticsServerResponseId.OK:
@@ -206,7 +207,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
             }
         }
 
-        public Dictionary<string,string> GetProcessEnvironment()
+        public Dictionary<string, string> GetProcessEnvironment()
         {
             var message = new IpcMessage(DiagnosticsServerCommandSet.Process, (byte)ProcessCommandId.GetProcessEnvironment);
             Stream continuation = IpcClient.SendMessage(_endpoint, message, out IpcMessage response);
@@ -217,7 +218,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
                     throw new ServerErrorException($"Get process environment failed (HRESULT: 0x{hr:X8})");
                 case DiagnosticsServerResponseId.OK:
                     ProcessEnvironmentHelper helper = ProcessEnvironmentHelper.Parse(response.Payload);
-                    Task<Dictionary<string,string>> envTask = helper.ReadEnvironmentAsync(continuation);
+                    Task<Dictionary<string, string>> envTask = helper.ReadEnvironmentAsync(continuation);
                     envTask.Wait();
                     return envTask.Result;
                 default:

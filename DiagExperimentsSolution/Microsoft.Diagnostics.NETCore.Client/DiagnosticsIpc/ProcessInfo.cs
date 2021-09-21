@@ -5,7 +5,7 @@
 using System;
 using System.Text;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc
 {
     /**
      * ==ProcessInfo==
@@ -33,7 +33,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
 
             int index = 0;
             processInfo.ProcessId = BitConverter.ToUInt64(payload, index);
-            index += sizeof(UInt64);
+            index += sizeof(ulong);
 
             byte[] cookieBuffer = new byte[GuidSizeInBytes];
             Array.Copy(payload, index, cookieBuffer, 0, GuidSizeInBytes);
@@ -51,16 +51,16 @@ namespace Microsoft.Diagnostics.NETCore.Client
         {
             // Length of the string of UTF-16 characters
             int length = (int)BitConverter.ToUInt32(buffer, index);
-            index += sizeof(UInt32);
+            index += sizeof(uint);
 
-            int size = (int)length * sizeof(char);
+            int size = length * sizeof(char);
             // The string contains an ending null character; remove it before returning the value
             string value = Encoding.Unicode.GetString(buffer, index, size).Substring(0, length - 1);
             index += size;
             return value;
         }
 
-        public UInt64 ProcessId { get; private set; }
+        public ulong ProcessId { get; private set; }
         public Guid RuntimeInstanceCookie { get; private set; }
         public string CommandLine { get; private set; }
         public string OperatingSystem { get; private set; }

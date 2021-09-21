@@ -10,11 +10,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Diagnostics.NETCore.Client
+namespace Microsoft.Diagnostics.NETCore.Client.DiagnosticsIpc
 {
     internal class ProcessEnvironmentHelper
     {
-        private ProcessEnvironmentHelper() {}
+        private ProcessEnvironmentHelper() { }
         public static ProcessEnvironmentHelper Parse(byte[] payload)
         {
             ProcessEnvironmentHelper helper = new ProcessEnvironmentHelper();
@@ -25,26 +25,26 @@ namespace Microsoft.Diagnostics.NETCore.Client
             return helper;
         }
 
-        public async Task<Dictionary<string,string>> ReadEnvironmentAsync(Stream continuation, CancellationToken token = default(CancellationToken))
+        public async Task<Dictionary<string, string>> ReadEnvironmentAsync(Stream continuation, CancellationToken token = default)
         {
-            var env = new Dictionary<string,string>();
+            var env = new Dictionary<string, string>();
 
             using var memoryStream = new MemoryStream();
-            await continuation.CopyToAsync(memoryStream, (16 << 10) /* 16KiB */, token);
+            await continuation.CopyToAsync(memoryStream, 16 << 10 /* 16KiB */, token);
             memoryStream.Seek(0, SeekOrigin.Begin);
             byte[] envBlock = memoryStream.ToArray();
 
-            if (envBlock.Length != (long)ExpectedSizeInBytes)
+            if (envBlock.Length != ExpectedSizeInBytes)
                 throw new ApplicationException($"ProcessEnvironment continuation length did not match expected length. Expected: {ExpectedSizeInBytes} bytes, Received: {envBlock.Length} bytes");
 
             int cursor = 0;
-            UInt32 nElements = BitConverter.ToUInt32(envBlock, cursor);
-            cursor += sizeof(UInt32);
+            uint nElements = BitConverter.ToUInt32(envBlock, cursor);
+            cursor += sizeof(uint);
             while (cursor < envBlock.Length)
             {
                 string pair = ReadString(envBlock, ref cursor);
                 int equalsIdx = pair.IndexOf('=');
-                env[pair.Substring(0,equalsIdx)] = equalsIdx != pair.Length - 1 ? pair.Substring(equalsIdx+1) : "";
+                env[pair.Substring(0, equalsIdx)] = equalsIdx != pair.Length - 1 ? pair.Substring(equalsIdx + 1) : "";
             }
 
             return env;
@@ -54,16 +54,16 @@ namespace Microsoft.Diagnostics.NETCore.Client
         {
             // Length of the string of UTF-16 characters
             int length = (int)BitConverter.ToUInt32(buffer, index);
-            index += sizeof(UInt32);
+            index += sizeof(uint);
 
-            int size = (int)length * sizeof(char);
+            int size = length * sizeof(char);
             // The string contains an ending null character; remove it before returning the value
             string value = Encoding.Unicode.GetString(buffer, index, size).Substring(0, length - 1);
             index += size;
             return value;
         }
 
-        private UInt32 ExpectedSizeInBytes { get; set; }
-        private UInt16 Future { get; set; }
+        private uint ExpectedSizeInBytes { get; set; }
+        private ushort Future { get; set; }
     }
 }
